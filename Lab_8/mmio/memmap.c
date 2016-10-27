@@ -80,7 +80,7 @@ int main (int argc, char *argv[])
    * 3. write a dummy byte at the last location
    */
    size_t size = 1;
-   int err = write(fdin, buf, size);
+   int err = write(fdout, buf, size);
    if( err < 0)
    {
      printf("write error");
@@ -89,10 +89,24 @@ int main (int argc, char *argv[])
   /*
    * 4. mmap the input file
    */
+    void* inLocation = mmap(NULL, fileSize, PROT_READ, MAP_SHARED, fdin, 0 );
+
+    if(inLocation < 0)
+    {
+      printf("memmap on input file error");
+    }
+
+
 
   /*
    * 5. mmap the output file
    */
+  void* outLocation = mmap(NULL, fileSize, (PROT_READ | PROT_WRITE), MAP_SHARED, fdout, 0 );
+
+  if(outLocation < 0)
+  {
+    printf("memmap on output file error");
+  }
 
   /*
    * 6. copy the input file to the output file
@@ -101,5 +115,5 @@ int main (int argc, char *argv[])
      * stores what is in the memory location pointed to by src into
      * the memory location pointed to by dest.
      */
-    *dst = *src;
+    memcpy(outLocation, inLocation, fileSize);
 }
