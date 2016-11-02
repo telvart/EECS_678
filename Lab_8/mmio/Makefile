@@ -1,4 +1,4 @@
-STUDENT_ID=XXXXXXX
+STUDENT_ID=2760606
 
 all:
 	gcc -g read_write.c -o read_write
@@ -17,4 +17,3 @@ tar: clean
 	cp Makefile memmap.c read_write.c $(STUDENT_ID)-mmio-lab/
 	tar cvzf $(STUDENT_ID)-mmio-lab.tar.gz $(STUDENT_ID)-mmio-lab
 	rm -rf $(STUDENT_ID)-mmio-lab
-

@@ -72,7 +72,7 @@ int main (int argc, char *argv[])
   /*
    * 2. go to the location corresponding to the last byte
    */
-   if(lseek(fdin, fileSize-1, SEEK_SET) < 0)
+   if(lseek(fdout, fileSize-1, SEEK_SET) < 0)
    {
      printf("lseek error");
    }
@@ -80,8 +80,8 @@ int main (int argc, char *argv[])
    * 3. write a dummy byte at the last location
    */
    size_t size = 1;
-   int err = write(fdin, buf, size);
-   if( err < 0)
+
+   if( write(fdout, buf, size) < 0)
    {
      printf("write error");
    }
@@ -90,16 +90,20 @@ int main (int argc, char *argv[])
    * 4. mmap the input file
    */
 
+   void* inLocation = mmap(NULL, fileSize, PROT_READ, MAP_SHARED, fdin, 0);
+
   /*
    * 5. mmap the output file
    */
-
+   void* outLocation = mmap(NULL, fileSize, (PROT_READ | PROT_WRITE), MAP_SHARED, fdout, 0);
   /*
    * 6. copy the input file to the output file
    */
+
+   memcpy(outLocation, inLocation, fileSize);
     /* Memory can be dereferenced using the * operator in C.  This line
      * stores what is in the memory location pointed to by src into
      * the memory location pointed to by dest.
      */
-    *dst = *src;
+  //  *dst = *src;
 }
